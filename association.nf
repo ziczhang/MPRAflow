@@ -328,7 +328,7 @@ if (params.fastq_insertPE_file != null) {
             file "*merged.fastqjoin" into mergedPE
         shell:
             """
-            fastq-join $fastq_insert $fastq_insertPE -o ${fastq_insert}_merged.fastq
+            fastq-join -m 100 $fastq_insert $fastq_insertPE -o ${fastq_insert}_merged.fastq
             """
     }
 }
@@ -363,8 +363,7 @@ if (params.fastq_insertPE_file != null) {
             file '*count_bam.txt' into bam_ch
         shell:
             """
-            bwa mem $design $chunk | \
-            samtools sort - -o ${name}.${chunk}.sorted.bam
+            bwa aln -n 0 $design $chunk | bwa samse $design - $chunk | samtools sort - -o ${name}.${chunk}.sorted.bam
 
             echo 'bam made'
 
@@ -398,7 +397,7 @@ if (params.fastq_insertPE_file != null) {
             file '*count_bam.txt' into bam_ch
         shell:
             """
-            bwa mem $design $chunk | samtools sort - -o ${name}.${chunk}.sorted.bam
+            bwa aln -n 0 $design $chunk |bwa samse $design - $chunk |samtools sort - -o ${name}.${chunk}.sorted.bam
             echo 'bam made'
             samtools view ${name}.${chunk}.sorted.bam | head
             samtools view ${name}.${chunk}.sorted.bam | wc -l > ${chunk}_count_bam.txt
