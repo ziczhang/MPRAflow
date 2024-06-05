@@ -328,7 +328,7 @@ if (params.fastq_insertPE_file != null) {
             file "*merged.fastqjoin" into mergedPE
         shell:
             """
-            fastq-join -m 100 $fastq_insert $fastq_insertPE -o ${fastq_insert}_merged.fastq
+            fastq-join $fastq_insert $fastq_insertPE -o ${fastq_insert}_merged.fastq
             """
     }
 }
